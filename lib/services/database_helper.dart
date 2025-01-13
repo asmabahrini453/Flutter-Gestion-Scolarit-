@@ -48,30 +48,12 @@ class DatabaseHelper {
     ''');
   }
 
-  // Insert a group
-  Future<int> insertGroup(Group group) async {
-    final db = await database;
-
-    return await db.insert('groups', group.toMap());
-  }
-
+  // Insert a student
   Future<int> insertStudent(Student student) async {
     final db = await database;
-    // Remove the 'id' field from the map
     final studentMap = student.toMap();
     studentMap.remove('id'); // Ensure 'id' is not included
     return await db.insert('students', studentMap);
-  }
-
-  // Update a group
-  Future<int> updateGroup(Group group) async {
-    final db = await database;
-    return await db.update(
-      'groups',
-      group.toMap(),
-      where: 'id = ?',
-      whereArgs: [group.id],
-    );
   }
 
   // Update a student
@@ -85,26 +67,10 @@ class DatabaseHelper {
     );
   }
 
-  // Get all groups
-  Future<List<Map<String, dynamic>>> getGroups() async {
-    final db = await database;
-    return await db.query('groups');
-  }
-
   // Get all students
   Future<List<Map<String, dynamic>>> getStudents() async {
     final db = await database;
     return await db.query('students');
-  }
-
-  // Delete a group
-  Future<int> deleteGroup(int id) async {
-    final db = await database;
-    return await db.delete(
-      'groups',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
   }
 
   // Delete a student
@@ -112,6 +78,39 @@ class DatabaseHelper {
     final db = await database;
     return await db.delete(
       'students',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Insert a group
+  Future<int> insertGroup(Group group) async {
+    final db = await database;
+    return await db.insert('groups', group.toMap());
+  }
+
+  // Get all groups
+  Future<List<Map<String, dynamic>>> getGroups() async {
+    final db = await database;
+    return await db.query('groups');
+  }
+
+  // Update a group
+  Future<int> updateGroup(Group group) async {
+    final db = await database;
+    return await db.update(
+      'groups',
+      group.toMap(),
+      where: 'id = ?',
+      whereArgs: [group.id],
+    );
+  }
+
+  // Delete a group
+  Future<int> deleteGroup(int id) async {
+    final db = await database;
+    return await db.delete(
+      'groups',
       where: 'id = ?',
       whereArgs: [id],
     );

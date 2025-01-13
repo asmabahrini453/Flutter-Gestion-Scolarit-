@@ -17,7 +17,9 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ajouter un Groupe'),
+        title: const Text('Ajouter un Groupe', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
+        elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -27,7 +29,18 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
             children: [
               TextFormField(
                 controller: _libelleController,
-                decoration: const InputDecoration(labelText: 'Libellé du Groupe'),
+                decoration: InputDecoration(
+                  labelText: 'Libellé du Groupe',
+                  labelStyle: const TextStyle(color: Colors.deepPurple),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.deepPurple),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer un libellé';
@@ -51,7 +64,14 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Ajouter'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Ajouter', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

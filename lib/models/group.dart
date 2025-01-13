@@ -1,13 +1,10 @@
 class Group {
-  final int id;
-  final String libelle;
+  int id;
+  String libelle;
 
-  Group({
-    required this.id,
-    required this.libelle,
-  });
+  Group({required this.id, required this.libelle});
 
-  // Convert a Group to a Map
+  // Convertir un Group en Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -15,7 +12,7 @@ class Group {
     };
   }
 
-  // Convert a Map to a Group
+  // Convertir un Map en Group
   factory Group.fromMap(Map<String, dynamic> map) {
     return Group(
       id: map['id'],

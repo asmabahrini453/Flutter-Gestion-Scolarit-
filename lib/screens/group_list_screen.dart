@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/group.dart';
 import '../services/database_helper.dart';
 import 'add_group_screen.dart';
-import 'edit_group_screen.dart'; // Importe l'écran de modification
+import 'edit_group_screen.dart';
 
 class GroupListScreen extends StatefulWidget {
   const GroupListScreen({super.key});
@@ -32,43 +32,68 @@ class _GroupListScreenState extends State<GroupListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Liste des Groupes'),
+        title: const Text('Liste des Groupes', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
+        elevation: 4,
       ),
-      body: ListView.builder(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        itemCount: groups.length,
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          return Card(
-            child: ListTile(
-              title: Text(group.libelle),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () async {
-                  final dbHelper = DatabaseHelper();
-                  await dbHelper.deleteGroup(group.id);
-                  setState(() {
-                    groups.removeAt(index);
-                  });
-                },
+        child: ListView.builder(
+          itemCount: groups.length,
+          itemBuilder: (context, index) {
+            final group = groups[index];
+            return Card(
+              elevation: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              onTap: () async {
-                final updatedGroup = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditGroupScreen(group: group),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                title: Text(
+                  group.libelle,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
                   ),
-                );
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () async {
+                        final updatedGroup = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditGroupScreen(group: group),
+                          ),
+                        );
 
-                if (updatedGroup != null) {
-                  setState(() {
-                    groups[index] = updatedGroup;
-                  });
-                }
-              },
-            ),
-          );
-        },
+                        if (updatedGroup != null) {
+                          setState(() {
+                            groups[index] = updatedGroup;
+                          });
+                        }
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        final dbHelper = DatabaseHelper();
+                        await dbHelper.deleteGroup(group.id);
+                        setState(() {
+                          groups.removeAt(index);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -79,7 +104,8 @@ class _GroupListScreenState extends State<GroupListScreen> {
             ),
           ).then((_) => _loadGroups());
         },
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.deepPurple,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

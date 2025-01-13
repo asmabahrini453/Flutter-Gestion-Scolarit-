@@ -25,7 +25,9 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modifier un Groupe'),
+        title: const Text('Modifier un Groupe', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
+        elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +37,18 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
             children: [
               TextFormField(
                 controller: _libelleController,
-                decoration: const InputDecoration(labelText: 'Libellé du Groupe'),
+                decoration: InputDecoration(
+                  labelText: 'Libellé du Groupe',
+                  labelStyle: const TextStyle(color: Colors.deepPurple),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.deepPurple),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer un libellé';
@@ -56,10 +69,17 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                     await dbHelper.updateGroup(group);
 
                     // Retour à l'écran précédent
-                    Navigator.pop(context);
+                    Navigator.pop(context, group);
                   }
                 },
-                child: const Text('Modifier'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Modifier', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
