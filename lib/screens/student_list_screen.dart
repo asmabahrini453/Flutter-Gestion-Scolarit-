@@ -4,6 +4,7 @@ import '../models/student.dart';
 import '../services/database_helper.dart';
 import 'add_student_screen.dart';
 import 'edit_student_screen.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import pour utiliser la fonction d'appel
 
 class StudentListScreen extends StatefulWidget {
   const StudentListScreen({super.key});
@@ -52,6 +53,19 @@ class _StudentListScreenState extends State<StudentListScreen> {
       _searchController.clear(); // Efface le texte de recherche
       filteredStudents = students; // Réinitialise la liste filtrée
     });
+  }
+
+  // Fonction pour lancer l'appel téléphonique
+  void _callStudent(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      throw 'Impossible de lancer l\'appel';
+    }
   }
 
   @override
@@ -118,24 +132,35 @@ class _StudentListScreenState extends State<StudentListScreen> {
                         Text('Date de Naissance: ${student.dateNaiss}'),
                       ],
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        final dbHelper = DatabaseHelper();
-                        await dbHelper.deleteStudent(student.id);
-                        setState(() {
-                          students.removeWhere((s) => s.id == student.id);
-                          filteredStudents.removeWhere((s) => s.id == student.id);
-                        });
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.phone, color: Colors.green),
+                          onPressed: () {
+                            _callStudent(student.tel); // Appeler l'étudiant
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            final dbHelper = DatabaseHelper();
+                            await dbHelper.deleteStudent(student.id);
+                            setState(() {
+                              students.removeWhere((s) => s.id == student.id);
+                              filteredStudents.removeWhere((s) => s.id == student.id);
+                            });
 
-                        // Show SnackBar
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Étudiant supprimé avec succès'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      },
+                            // Show SnackBar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Étudiant supprimé avec succès'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                     onTap: () async {
                       final updatedStudent = await Navigator.push(
