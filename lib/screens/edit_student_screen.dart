@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../models/student.dart';
 import '../services/database_helper.dart';
 
@@ -20,16 +19,6 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
   late TextEditingController _telController;
   late TextEditingController _photoController;
   late TextEditingController _groupeldController;
-
-  void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
-    );
-  }
 
   @override
   void initState() {
@@ -126,7 +115,14 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
                     final dbHelper = DatabaseHelper();
                     await dbHelper.updateStudent(student);
 
-                    _showToast('Étudiant modifié avec succès');
+                    // Show SnackBar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Étudiant modifié avec succès'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
                     Navigator.pop(context, student);
                   }
                 },

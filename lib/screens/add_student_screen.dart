@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../models/student.dart';
@@ -32,16 +31,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         _photoController.text = pickedFile.path;
       });
     }
-  }
-
-  void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.black54,
-      textColor: Colors.white,
-    );
   }
 
   @override
@@ -141,19 +130,26 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final student = Student(
+                      id: 0, // Auto-incremented by SQLite
                       nom: _nomController.text,
                       prenom: _prenomController.text,
                       dateNaiss: _dateNaissController.text,
                       tel: _telController.text,
                       photo: _photoController.text,
                       groupeld: int.parse(_groupeldController.text),
-                      id: 0,
                     );
 
                     final dbHelper = DatabaseHelper();
                     await dbHelper.insertStudent(student);
 
-                    _showToast('Étudiant ajouté avec succès');
+                    // Show SnackBar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Étudiant ajouté avec succès'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
                     Navigator.pop(context, true);
                   }
                 },
